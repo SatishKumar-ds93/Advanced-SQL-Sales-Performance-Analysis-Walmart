@@ -12,7 +12,7 @@
 
 [MySQL](https://github.com/SatishKumar-ds93/Advanced-SQL-Sales-Performance-Analysis-Walmart/blob/main/WalmartProjectSQL.sql)
 
-[PowerPoint](https://github.com/SatishKumar-ds93/Advanced-SQL-Sales-Performance-Analysis-Walmart/blob/main/walmart_ppt.pptx)
+[PowerPointPresentation](https://github.com/SatishKumar-ds93/Advanced-SQL-Sales-Performance-Analysis-Walmart/blob/main/walmart_ppt.pptx)
 
 # Summary & Business Problem
 Walmart operates across multiple cities and branches, generating thousands of daily retail transactions. To stay competitive and optimize store operations, leadership needs data-driven answers to critical business questions regarding **branch growth, product profitability, customer segmentation, and anomalies**.
