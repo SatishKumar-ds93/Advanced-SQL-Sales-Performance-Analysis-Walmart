@@ -1,14 +1,16 @@
 # Advanced-SQL-Sales-Performance-Analysis-Walmart
-In this project, I performed a Sales Performance Analysis of Walmart Stores using Advanced MySQL Techniques to explore historical sales transactions, identify business trends, and answer important business questions.
 
-## Sales Performance Analysis of Walmart Stores Using Advanced MySQL
+<img src="Images/Walmart%20Sales%20Analytics%20with%20MySQL.png" alt="Walmart_Sales_Analytics_with_SQL.png" width="600" height="500">
 
-![Task]()
+## Link- Sales Performance Analysis of Walmart Stores Using Advanced MySQL
+
+![PtojectTask]()
 ![Datasetcsv]()
+![WalmartSalesAnalysis]()
 ![MySQL]()
 ![PowerPoint]()
 
-## Summary & Business Problem
+# Summary & Business Problem
 Walmart operates across multiple cities and branches, generating thousands of daily retail transactions. To stay competitive and optimize store operations, leadership needs data-driven answers to critical business questions regarding **branch growth, product profitability, customer segmentation, and anomalies**.
 
 Using **MySQL 8.0**, I analyzed **1,000 historical transaction records** across three branches (A, B, and C) to uncover actionable insights that drive revenue growth, customer retention, and fraud/outlier detection.
