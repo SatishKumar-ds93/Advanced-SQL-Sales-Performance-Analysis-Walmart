@@ -159,19 +159,61 @@ Solution of Task 1 to 10
 
 - **Business Question:** Which Walmart branch experienced the highest sales growth over the observed months?
 - **Analysis:** Calculated total sales for each branch across January, February, and March, then compared monthly sales growth rates.
-- **Queries:**
 
-  - Total Sales
+- **Query 1:** Calculate total sales by branch and month
 
-![](Images/Task1%20Total%20Montly%20sales%20by%20each%20Branch.png)
+   - **SQL Explanation**: Calculate the total monthly sales by each branch
+   
+   - `SELECT Branch`: select the column of Branch from the table
+   - `DATE_FORMAT(Date, '%Y-%m')`: Converts the date into a year-month format, such as 2019-01.
+   - `SUM(Total)`: Adds all transaction amounts for that branch and month.
+   - `GROUP BY Branch, Month`: Creates one sales total for each branch-month combination.
+   - `ORDER BY Branch, Month`: Displays the results in branch and month order.
+ 
+   - **Mathematical Formula**: Monthly Sales by each Branch in the month = Total sums of total sales of each branch in a month
 
-  - Average growth rate
+   - **Results**: Total Monthly Sales by each Branch
 
-![](Images/Task1%20average%20growth%20rate%20by%20A.png)
+      ![](Images/Task1%20Total%20Montly%20sales%20by%20each%20Branch.png)
 
-  - Highest Growth Rate
+- **Query 2:** After calculating monthly sales, we need to compare the current month's sales with the previous month's sales for the same branch. 
 
-![](Images/Task1%20highest%20growth%20rate.png)
+  - **SQL Explanation**: Calculate monthly growth rate using `LAG()` **Window Function**
+ 
+  - `WITH MonthlySales AS`	Creates a CTE (Common Table Expression) to store monthly sales results temporarily
+  - `LAG(Total_Sales`)	Retrieves the previous month's sales
+  - `OVER()`	Defines the window over which the function operates
+  - `PARTITION BY Branch`	Separates calculations for each branch
+  - `ORDER BY Month`	Ensures months are compared chronologically
+ 
+  - **Mathematical Formula**: Growth Rate = (Current Month Sales - Prev. Month Sales)/ Prev. Month Sales
+
+                              Growth Rate(%) = (Current Price - Prev. Price)/Prev. Price x 100
+    
+  - **Noted**: Why `PARTITION BY Branch` matters: Without it, the previous value could belong to a different branch. Partitioning ensures Branch A is compared    only with its own previous month, and the same applies to other branches.
+
+  - **Results**: Average monthly growth sales
+
+     ![](Images/Task1%20average%20growth%20rate%20by%20A.png)
+
+
+- **Query 3:** Find the branch with the highest average growth sales rate
+
+  - **SQL Explanation**: Calculating monthly growth gives us multiple growth rates for each branch. To identify the overall top-performing branch.
+
+  - `AVG(Growth_Rate)`: Calculates the average monthly growth rate.
+  - `GROUP BY Branch`: Calculates one average for each branch.
+  - `ORDER BY Avg_Growth_Rate DESC`: Places the highest average first.
+  - `LIMIT 1`: Returns the top branch.
+
+  - **Mathematical Formula**: Sum of Average Monthly Growth Rates/Number of valid monthly growth rates
+
+  - **Noted**: The first month for each branch has no previous month, so LAG() returns NULL. AVG() ignores NULL values
+
+
+  - **Results**: Highest Growth Rate
+
+    ![](Images/Task1%20highest%20growth%20rate.png)
 
 - **Key Findings:**
   - Branch A recorded the highest reported monthly growth rate.
@@ -183,9 +225,34 @@ Solution of Task 1 to 10
 
 - **Business Question:** Which product line contributes the highest profit to each branch?
 - **Analysis:** Compared gross income and cost of goods sold to evaluate product-level profitability across the branches.
-- **Queries:**
 
-![](Images/Task2%20highest%20profit%20by%20each%20branch%20of%20product%20line.png)
+- **Query 1**: Calculate total gross income by branch and product line
+
+  - **SQL Explanation**: Calcultion of profit(gross_income) = difference between total(cogs+tax5%) and revenue or cogs = (unit price x quantity)
+ 
+  - `SUM(gross_income)`: Adds gross income from all transactions.
+  - `GROUP BY Branch, Product_line`: Groups records by branch and product category.
+  - `ORDER BY Branch, Total_Profit DESC`: Sorts product lines from highest to lowest gross income within each branch.
+ 
+  - **Mathematical Formula**: Total Gross Income = Sum of gross income per transactions
+
+- **Query 2**: Find the highest-profit product line in each branch
+
+  - **SQL Explanation**:The first query calculates gross income for every product line. However, Walmart wants only the product line with the highest gross income in each branch.
+
+    This query uses a CTE and a subquery to identify the maximum value for every branch.
+
+  - `ProfitData`: Stores total gross income by branch and product line.
+  - `MAX(Total_Profit)`: Finds the maximum gross income within each branch.
+  - `GROUP BY Branch`: Calculates a separate maximum for each branch.
+  - `(Branch, Total_Profit)` `IN (...)`: Matches the branch and maximum gross income against the CTE.
+  - The outer query returns the corresponding product line.
+
+   - **Mathematical Formula**: {Best Product Line}={MAX}({Total Gross Income})
+ 
+   - **Results**
+
+     ![](Images/Task2%20highest%20profit%20by%20each%20branch%20of%20product%20line.png)
 
 - **Key Findings:**
 
@@ -204,19 +271,36 @@ Solution of Task 1 to 10
   - High Spenders
   - Medium Spenders
   - Low Spenders
-- **Queries**:
 
-  - Total Spending by Customer
+- **Query 1**: Calculate total spending per customer and average spending per customer
 
-![](Images/Task3%20total%20spending%20by%20customer.png)
+  - **SQL Explanation**: Sum of spending per customer
+ 
+  - `SUM(Total)` measures the customer's cumulative spending.
 
-  - Average Spending by Customer
+  - **Results**: Total Spending by Customer
 
-![](Images/Task3%20avg%20spending%20by%20customer.png)
+  ![](Images/Task3%20total%20spending%20by%20customer.png)
 
-  - Tier wise Customer Segmentation
+  - `AVG(Total)` measures the average transaction amount.
 
-![](Images/Task3%20tier%20wise%20customer%20segment.png)
+  - **Results**: Average Spending by Customer = Total customer spending/Number of transactions
+
+  ![](Images/Task3%20avg%20spending%20by%20customer.png)
+
+- **Query 3**: After observation of total spending by each customer I Classify customers into 3 spending tiers- Low, Medium, High
+
+  - **SQL Explanation** Once the total spending of each customer is calculated, Walmart can classify customers into different spending groups.
+
+  - `ROUND(SUM(Total), 2)`: Calculates total spending and rounds it to two decimal places.
+  - `CASE`: Applies conditional logic to classify customers.
+  - `WHEN`: Defines each condition.
+  - `THEN`: Assigns the corresponding category.
+  - `ELSE`: Assigns the category when previous conditions are not satisfied.
+
+  - **Results** - Tier wise Customer Segmentation
+
+    ![](Images/Task3%20tier%20wise%20customer%20segment.png)
 
 - **Key Finding:** The analysis identified different spending levels, with the highest reported individual customer spending of approximately **$26,634**.
 - **Business Recommendation:** Develop targeted loyalty programs, personalized offers, and retention campaigns for high-value customers.
@@ -225,9 +309,65 @@ Solution of Task 1 to 10
 
 - **Business Question:** Are there transactions with unusually high or low sales compared with their product-line averages?
 - **Analysis:** Compared individual transaction amounts against product-line averages and standard deviations to identify unusual observations.
-- **Queries**:
 
-![](Images/Task4%20anomolies%20compared%20to%20the%20average%20sales%20for%20the%20product%20line.png)
+- **Query**: To find the anomalies
+
+   - **SQL Explanation**: These are the steps to detecting anomalies in sales transactions
+
+   - `AVG()` to calculate average sales by product line.
+   - `CTE` to store average sales.
+   - `JOIN` to connect individual transactions with product line averages.
+   - Mathematical `deviation formula` to measure differences.
+   - `ABS()` to detect high and low deviations.
+   - `WHERE` to filter transactions exceeding the threshold.
+   - `ORDER` BY to sort the anomalies.
+
+   **Step1**: Calculate average sales by product line-
+
+   - Average Sales= Sum of transactions sales(Total)/Number of Transactions
+
+   **Step2**: `Join` transaction data with average sales
+
+   - Why `JOIN` is used
+  
+    The original wsales table contains individual transaction values, while the AvgSales CTE contains average sales by product line.
+
+    The join connects each transaction with its product line's average.
+    - `ws` is an alias for the original table.
+    - `avg` is an alias for the CTE.
+    - `ON` matches the product line in both datasets.
+
+   **Step3**: Calculate deviation
+ 
+    - (`ws.Total` - `avg.Avg_Sales`) / `avg.Avg_Sales` `AS` Deviation
+    - It measures how far a transaction is from its product line's average, relative to that average.
+
+    **Mathematical formula**
+
+    - Deviation=(Transaction Sales-Average Sales)/Average Sales
+
+   **Step4**: Identify anomalies using `ABS()`
+
+    - Why ABS() is used because ABS() returns the absolute value, removing the negative sign.
+    - This means the query can identify both:
+    - Transactions more than 50% above average.
+    - Transactions more than 50% below average.
+
+    - **Logical formula** {Deviation}>0.5
+
+    - Example:
+
+| Deviation |	Absolute deviation | Anomaly |
+| :-------- | :----------------- | :------ |
+|    0.20   |	       0.20        |	  No   |
+|    0.60   |	       0.60        |	  Yes  |
+|   -0.70   |	       0.70        |	  Yes  |
+|   -0.30   |	       0.30        |	  No   |
+
+  
+  **Step5 Results**: Sort the results
+
+  ![](Images/Task4%20anomolies%20compared%20to%20the%20average%20sales%20for%20the%20product%20line.png)
 
 
 - **Key Finding:** One highlighted transaction was identified as an anomaly:
@@ -242,9 +382,37 @@ Solution of Task 1 to 10
 
 - **Business Question:** Which payment methods are most frequently used by customers in different cities?
 - **Analysis:** Grouped transactions by city and payment method and compared transaction frequencies.
-- **Queries**:
 
-![](Images/Task5%20most%20popular%20payment%20method%20in%20each%20city.png)
+- **Query**: To find the payment method is most frequently used by customers in each city
+
+  - **SQL Explanation**: These are the steps
+
+  - `COUNT(*)` to count payment transactions.
+  - `GROUP BY City`, Payment to aggregate payment methods.
+  - `CTE` to store ranked payment results.
+  - `ROW_NUMBER()` to rank payment methods.
+  - `PARTITION BY City` to rank independently within each city.
+  - `WHERE rn = 1` to return the most popular method.
+
+   **Step1**: `Count` payment transactions
+
+   - Payment Count= Number of Transactions for a Payment Method
+
+   **Step2**: `Rank` payment methods using ROW_NUMBER()
+
+   - Why ROW_NUMBER() is used
+   - It assigns a sequential ranking to each payment method within each city
+
+   **Step3**: Ranked it
+
+   - `PARTITION BY City`: Restarts the ranking for each city.
+   - `ORDER BY COUNT(*) DESC`: Ranks the most frequently used payment method first.
+   - `ROW_NUMBER()`: Assigns ranking numbers such as 1, 2, 3.
+  
+
+ **Results**:
+
+  ![](Images/Task5%20most%20popular%20payment%20method%20in%20each%20city.png)
 
 - **Key Findings:**
 
@@ -256,19 +424,30 @@ Solution of Task 1 to 10
 
 - **Business Recommendation:** Optimize payment-related promotions and customer convenience according to regional payment preferences.
 
+
 ### Task 6: Monthly Sales Distribution by Gender
 
 - **Business Question:** How does monthly sales revenue differ between male and female customers?
 - **Analysis:** Grouped total sales by month and gender to understand differences in purchasing patterns.
-- **Queries**:
+
+- **Query**:
+
+  - **SQL Explanation**
+
+  - `DATE_FORMAT()` to extract the month.
+  - `SUM()` to calculate monthly sales.
+  - `GROUP BY Month, Gender` to aggregate sales.
+  - `ORDER BY` to sort the results.
+  - `LIMIT` to restrict the number of returned records.
+  - `ROW_NUMBER()` and `PARTITION BY` in the improved version to rank gender sales within each month.
 
   - Monthly sales by Gender
 
-![](Images/Task6%20montly%20total%20sales%20dsitribution%20by%20gender.png)
+    ![](Images/Task6%20montly%20total%20sales%20dsitribution%20by%20gender.png)
 
   - Highest monthly sales by Gender
 
-![](Images/Task6%20highes%20monthly%20sales%20distribution%20by%20gender.png)
+    ![](Images/Task6%20highes%20monthly%20sales%20distribution%20by%20gender.png)
 
 - **Key Findings:**
   - **January:** Female sales were **$59,140**, compared with male sales of **$57,154**.
@@ -281,15 +460,25 @@ Solution of Task 1 to 10
 
 - **Business Question:** Which product lines are preferred by Member and Normal customers?
 - **Analysis:** Compared sales across product lines for the two customer categories.
-- **Queries**:
+
+- **Query**:
+
+- **SQL Explanation**
+
+  - `SUM()` to calculate total sales.
+  - `GROUP BY Customer_type, Product_line` to aggregate product sales.
+  - `CTE` to store the aggregated and ranked data.
+  - `ROW_NUMBER()` to rank product lines.
+  - `PARTITION BY Customer_type` to rank separately by customer type.
+  - `WHERE rn = 1` to identify the highest-selling product line.
 
   - Best Product Line By Customer Type
 
-![](Images/Task7%20best%20product%20line%20total%20sales%20with%20customer%20type.png)
+    ![](Images/Task7%20best%20product%20line%20total%20sales%20with%20customer%20type.png)
 
   - Best Product Line Member vs Normal
 
-![](Images/Task7%20best%20product%20line%20total%20sales%20with%20customer%20type.png)
+    ![](Images/Task7%20best%20product%20line%20total%20sales%20with%20customer%20type.png)
 
 - **Key Findings:**
 
@@ -304,9 +493,57 @@ Solution of Task 1 to 10
 
 - **Business Question:** Which customers made multiple purchases within a 30-day period?
 - **Analysis:** Examined customer transaction dates and identified repeat purchases within the specified timeframe.
-- **Queries**:
 
-![](Images/Task8%20customers%20repeat%20purchases%20within%2030%20days.png)
+- **Query 1**: Identify customers who purchased again within 30 days
+
+  - **SQL Explanation**:
+
+    - `LAG()` to retrieve previous purchase dates.
+    - `PARTITION BY Customer_ID` to compare purchases for the same customer.
+    - `ORDER BY Date` to arrange purchases chronologically.
+    - `DATEDIFF()` to calculate days between purchases.
+    - `IS NOT NULL` to exclude the first purchase.
+    - `DISTINCT` to return unique repeat customers.
+    - `COUNT(*)` to count qualifying repeat-purchase transactions.
+    - Subquery to perform date comparison before filtering.
+
+ - **Step 1**: Find the previous purchase date using `LAG()`
+
+   - Why `LAG()` is used
+   - `LAG()` retrieves the previous row's date within the same customer's transaction history.
+
+   - Why `PARTITION BY Customer_ID` is used
+   - It ensures that the previous purchase date belongs to the same customer.
+   - Without partitioning, a transaction from another customer could incorrectly become the previous purchase.
+
+   - Why `ORDER BY Date` is used
+   - It ensures the transactions are arranged chronologically
+  
+- **Step 2**: Calculate the difference between purchase dates
+
+   - Why `DATEDIFF()` is used
+   - It calculates the number of days between two dates.
+
+- **Mathematical formula** Days Between Purchases = (Current Purchase Date) - (Previous Purchase Date)
+
+
+- **Step 3**: Apply the 30-day condition
+
+   - Why these conditions are used
+   - `DATEDIFF(...) <= 30`: Keeps purchases made within 30 days of the previous purchase.
+   - prev_purchase_date `IS NOT NULL`: Removes the first purchase for each customer because there is no earlier purchase to compare.
+
+- **Step 4**: Use `DISTINCT`
+
+  - Why DISTINCT is used
+  - A customer might make multiple repeat purchases within 30 days. DISTINCT ensures that the customer ID appears only once in the output.
+
+
+**Query 2**: Count qualifying repeat purchases for each customer
+
+  - **Results**
+
+    ![](Images/Task8%20customers%20repeat%20purchases%20within%2030%20days.png)
 
 - **Key Findings:**
   - **Customer group 1–10:** 66 reported repeat purchases.
@@ -317,9 +554,19 @@ Solution of Task 1 to 10
 
 - **Business Question:** Who are the five highest revenue-generating customers?
 - **Analysis:** Aggregated total sales revenue by customer and ranked customers based on their contribution.
-- **Queries**:
 
-![](Images/Task9%20top%205%20customers%20revnue%20generate%20sales%20volume.png)
+- **Query**:
+
+  - **SQL Explanation**:
+
+  - `SUM()` to calculate total customer sales.
+  - `GROUP BY Customer_ID` to aggregate sales by customer.
+  - `ORDER BY Total_Sales DESC` to rank customers by revenue.
+  - `LIMIT 5` to return the top five customers.
+
+  - **Results**
+
+    ![](Images/Task9%20top%205%20customers%20revnue%20generate%20sales%20volume.png)
 
 - **Key Findings:**
 
@@ -337,12 +584,63 @@ Solution of Task 1 to 10
 
 - **Business Question:** Which days of the week generate the highest sales revenue?
 - **Analysis:** Extracted the day of the week from transaction dates and calculated total sales for each day.
-- **Queries**:
 
+- **Query 1**: Calculate total sales for each weekday
+
+- **SQL Explanation**:
+
+  - DAYNAME() to extract the weekday.
+  - SUM() to calculate sales per weekday.
+  - GROUP BY to aggregate sales.
+  - FIELD() to arrange weekdays in calendar order.
+  - ORDER BY Total_Sales DESC to rank weekdays by sales.
+  - LIMIT 1 to return the highest-sales weekday.
+
+**Step 1**: Extract the weekday name
+
+  - Why DAYNAME() is used
+  - It extracts the weekday name from a date
+
+**Step 2**: Calculate total sales
+
+  - **Mathematical Formula** {Sales by Weekday} = {Transaction Sales for That Weekday}
+
+**Step 3**: Group transactions by weekday
+
+ - This combines transactions from the same weekday.
+
+ - For example, all Monday transactions are grouped together, regardless of the month or date.
+
+
+**Step 4**: Sort weekdays using FIELD()
+ 
+ - Why FIELD() is used
+
+ - By default, alphabetical sorting would place Friday before Monday, which is not the normal weekday sequence.
+
+ - FIELD() allows you to define your preferred order.
+
+
+- It returns the position of a value in the supplied list:
+
+|    Day    |	FIELD position |
+| Sunday    |	      1        |       
+| Monday    |       2        | 
+| Tuesday   |       3        |        
+| Wednesday |       4        |
+| Thursday	|       5        |   
+| Friday	  |       6        |
+| Saturday	|       7        |  
+  
   - Days of Week
 
 ![](Images/Task10%20day%20of%20week%20wise%20total%20sales.png)
 
+
+- **Query 2**: Find the weekday with the highest sales
+
+**Formula** {Highest Sales Day} = {MAX}({Sales by Weekday})
+  
   - Highest Sales Day
 
 ![](Images/Task10%20highest%20sales%20day.png)
