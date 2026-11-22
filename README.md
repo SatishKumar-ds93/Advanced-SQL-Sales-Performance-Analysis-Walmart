@@ -88,3 +88,9 @@ The dataset was imported into a structured relational table (`wsales`) with stri
 4. **Tailor Regional Checkout Campaigns:** Partner with E-wallet providers for cashback offers in **Yangon and Mandalay**, while maintaining streamlined cash-handling lanes in **Naypyitaw**.
 
 5. **VIP Retention Program:** Reward the Top 5 customers (especially Customer ID 8) with early access to seasonal sales to protect high-tier revenue.
+
+
+## Copyright & Usage
+Copyright (c) 2026 [$ATISH KUMAR]. All Rights Reserved.  
+Unauthorized copying, modification, distribution, or use of this software is strictly prohibited.
+
