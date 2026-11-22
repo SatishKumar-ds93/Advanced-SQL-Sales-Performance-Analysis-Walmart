@@ -1,4 +1,4 @@
-Copyright (c) 2026 [$ATISH KUMAR]. All Rights Reserved.
+Copyright © 2026 [$ATISH KUMAR]. All Rights Reserved.
 
 This code is publicly visible for viewing purposes only.
 
