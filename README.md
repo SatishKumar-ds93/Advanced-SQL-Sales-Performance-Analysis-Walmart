@@ -91,6 +91,6 @@ The dataset was imported into a structured relational table (`wsales`) with stri
 
 
 ## Copyright & Usage
-Copyright (c) 2026 [$ATISH KUMAR]. All Rights Reserved.  
+Copyright © 2026 [$ATISH KUMAR]. All Rights Reserved.  
 Unauthorized copying, modification, distribution, or use of this software is strictly prohibited.
 
