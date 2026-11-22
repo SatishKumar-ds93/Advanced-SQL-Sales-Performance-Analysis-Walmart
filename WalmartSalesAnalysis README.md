@@ -170,7 +170,10 @@ Solution of Task 1 to 10
    - `GROUP BY Branch, Month`: Creates one sales total for each branch-month combination.
    - `ORDER BY Branch, Month`: Displays the results in branch and month order.
  
-   - **Mathematical Formula**: Monthly Sales by each Branch in the month = Total sums of total sales of each branch in a month
+   - **Mathematical Formula**: Monthly Sales by each Branch in the month = Sum of total transaction sales of each branch in a month
+
+                                Monthly Sales by each Branch in the month = Sum of total transactions of each branch in a month
+
 
    - **Results**: Total Monthly Sales by each Branch
 
@@ -186,9 +189,10 @@ Solution of Task 1 to 10
   - `PARTITION BY Branch`	Separates calculations for each branch
   - `ORDER BY Month`	Ensures months are compared chronologically
  
-  - **Mathematical Formula**: Growth Rate = (Current Month Sales - Prev. Month Sales)/ Prev. Month Sales
+  - **Mathematical Formula**:
+                                Growth Rate = (Current Month Sales - Prev. Month Sales)/ Prev. Month Sales
 
-                              Growth Rate(%) = (Current Price - Prev. Price)/Prev. Price x 100
+                                Growth Rate(%) = (Current Price - Prev. Price)/Prev. Price x 100
     
   - **Noted**: Why `PARTITION BY Branch` matters: Without it, the previous value could belong to a different branch. Partitioning ensures Branch A is compared    only with its own previous month, and the same applies to other branches.
 
@@ -206,7 +210,9 @@ Solution of Task 1 to 10
   - `ORDER BY Avg_Growth_Rate DESC`: Places the highest average first.
   - `LIMIT 1`: Returns the top branch.
 
-  - **Mathematical Formula**: Sum of Average Monthly Growth Rates/Number of valid monthly growth rates
+  - **Mathematical Formula**: Average Growth Rate = Sum of monthly Growth Rates/Number of valid monthly growth rates
+ 
+                               Average Growth Rate = Sum of monthly Growth Rates/Number of valid monthly growth rates
 
   - **Noted**: The first month for each branch has no previous month, so LAG() returns NULL. AVG() ignores NULL values
 
@@ -253,7 +259,9 @@ Solution of Task 1 to 10
   - `(Branch, Total_Profit)` `IN (...)`: Matches the branch and maximum gross income against the CTE.
   - The outer query returns the corresponding product line.
 
-   - **Mathematical Formula**: {Best Product Line}={MAX}({Total Gross Income})
+   - **Mathematical Formula**: Best Product Line = MAX(Total Gross Income)
+ 
+                                Best Product Line = MAX(Total Gross Income)
  
    - **Results**
 
@@ -289,7 +297,9 @@ Solution of Task 1 to 10
 
   - `AVG(Total)` measures the average transaction amount.
 
-  - **Results**: Average Spending by Customer = Total customer spending/Number of transactions
+  - **Results**:
+  
+                       Average Spending by Customer = Total customer spending/Number of transactions
 
   ![](Images/Task3%20avg%20spending%20by%20customer.png)
 
@@ -302,6 +312,15 @@ Solution of Task 1 to 10
   - `WHEN`: Defines each condition.
   - `THEN`: Assigns the corresponding category.
   - `ELSE`: Assigns the category when previous conditions are not satisfied.
+  - **Logical Analysis**
+
+    -Tier
+
+    -**Low**: {Spending}<20556
+    
+    -**Medium**: 20556<={Spending}=>23456
+    
+    -**High**:{Spending}>23456
 
   - **Results** - Tier wise Customer Segmentation
 
@@ -329,7 +348,7 @@ Solution of Task 1 to 10
 
    **Step1**: Calculate average sales by product line-
 
-   - Average Sales= Sum of transactions sales(Total)/Number of Transactions
+              Average Sales= Sum of transactions sales(Total)/Number of Transactions
 
    **Step2**: `Join` transaction data with average sales
 
@@ -349,7 +368,7 @@ Solution of Task 1 to 10
 
     **Mathematical formula**
 
-    - Deviation=(Transaction Sales-Average Sales)/Average Sales
+                                 Deviation=(Transaction Sales-Average Sales)/Average Sales
 
    **Step4**: Identify anomalies using `ABS()`
 
@@ -514,22 +533,22 @@ Solution of Task 1 to 10
 
  - **Step 1**: Find the previous purchase date using `LAG()`
 
-   - Why `LAG()` is used
+   - **Why `LAG()` is used**
    - `LAG()` retrieves the previous row's date within the same customer's transaction history.
 
-   - Why `PARTITION BY Customer_ID` is used
+   - **Why `PARTITION BY Customer_ID` is used**
    - It ensures that the previous purchase date belongs to the same customer.
    - Without partitioning, a transaction from another customer could incorrectly become the previous purchase.
 
-   - Why `ORDER BY Date` is used
+   - **Why `ORDER BY Date` is used**
    - It ensures the transactions are arranged chronologically
   
 - **Step 2**: Calculate the difference between purchase dates
 
-   - Why `DATEDIFF()` is used
+   - **Why `DATEDIFF()` is used**
    - It calculates the number of days between two dates.
 
-- **Mathematical formula** Days Between Purchases = (Current Purchase Date) - (Previous Purchase Date)
+- **Mathematical formula**            Days Between Purchases = (Current Purchase Date) - (Previous Purchase Date)
 
 
 - **Step 3**: Apply the 30-day condition
@@ -540,7 +559,7 @@ Solution of Task 1 to 10
 
 - **Step 4**: Use `DISTINCT`
 
-  - Why DISTINCT is used
+  - **Why DISTINCT is used**
   - A customer might make multiple repeat purchases within 30 days. DISTINCT ensures that the customer ID appears only once in the output.
 
 
@@ -603,7 +622,7 @@ Solution of Task 1 to 10
 
 **Step 1**: Extract the weekday name
 
-  - Why DAYNAME() is used
+  - **Why DAYNAME() is used**
   - It extracts the weekday name from a date
 
 **Step 2**: Calculate total sales
@@ -619,7 +638,7 @@ Solution of Task 1 to 10
 
 **Step 4**: Sort weekdays using FIELD()
  
- - Why FIELD() is used
+ - **Why FIELD() is used**
 
  - By default, alphabetical sorting would place Friday before Monday, which is not the normal weekday sequence.
 
@@ -629,13 +648,14 @@ Solution of Task 1 to 10
 - It returns the position of a value in the supplied list:
 
 |    Day    |	FIELD position |
+| :-------- | :-------------- |
 | Sunday    |	      1        |       
-| Monday    |       2        | 
-| Tuesday   |       3        |        
-| Wednesday |       4        |
-| Thursday	|       5        |   
-| Friday	  |       6        |
-| Saturday	|       7        |  
+| Monday    |        2        | 
+| Tuesday   |        3        |        
+| Wednesday |        4        |
+| Thursday	|        5        |   
+| Friday	   |        6        |
+| Saturday	|        7        |  
   
   - Days of Week
 
@@ -666,7 +686,18 @@ Solution of Task 1 to 10
 
 ---
 
-## 8. Overall Business Insights
+## 8. Mathematical Formula
+
+
+![](Images/maths%20formula.png)
+
+
+## 9. SQL Concept
+
+![](Images/sql%20use.png)
+
+
+## 10. Overall Business Insights
 
 The analysis provides several useful observations:
 
@@ -681,7 +712,7 @@ The analysis provides several useful observations:
 
 ---
 
-## 9. Business Recommendations
+## 11. Business Recommendations
 
 Based on the analysis, the following actions could help improve retail performance:
 
@@ -696,7 +727,7 @@ Based on the analysis, the following actions could help improve retail performan
 
 ---
 
-## 10. Project Conclusion
+## 12. Project Conclusion
 
 This project demonstrates how SQL can be used to convert raw retail transaction data into meaningful business insights.
 
@@ -705,6 +736,8 @@ By analyzing 1,000 Walmart sales transactions, I explored branch performance, pr
 The project strengthened my practical understanding of MySQL database management, advanced SQL querying, analytical thinking, and business problem-solving.
 
 It also demonstrated the importance of connecting technical SQL analysis with business objectives and communicating findings through visual presentations.
+
+
 
 
 ## Additional Task: Interactive Sales Dashboard Creation Using Microsoft Excel
