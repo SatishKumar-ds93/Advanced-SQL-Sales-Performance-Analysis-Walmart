@@ -176,7 +176,7 @@ Solution of Task 1 to 10
 
       ![](Images/Task1%20Total%20Montly%20sales%20by%20each%20Branch.png)
 
-- **Query 2:** After calculating monthly sales, we need to compare the current month's sales with the previous month's sales for the same branch. 
+- **Query 2:** After calculating monthly sales, compare the current month's sales with the previous month's sales for the same branch. 
 
   - **SQL Explanation**: Calculate monthly growth rate using `LAG()` **Window Function**
  
@@ -228,13 +228,18 @@ Solution of Task 1 to 10
 
 - **Query 1**: Calculate total gross income by branch and product line
 
-  - **SQL Explanation**: Calcultion of profit(gross_income) = difference between total(cogs+tax5%) and revenue or cogs = (unit price x quantity)
+  - **SQL Explanation**: Profit(gross_income) = difference between total(cogs+tax5%) and revenue or cogs = (unit price x quantity)
+ 
+                         Profit(gross_income) = total(cogs + tax5%) - cogs
+                         cost of goods sales  = unit price x quantity
  
   - `SUM(gross_income)`: Adds gross income from all transactions.
   - `GROUP BY Branch, Product_line`: Groups records by branch and product category.
   - `ORDER BY Branch, Total_Profit DESC`: Sorts product lines from highest to lowest gross income within each branch.
  
   - **Mathematical Formula**: Total Gross Income = Sum of gross income per transactions
+
+                               Total Gross Income = Sum of gross income per transactions
 
 - **Query 2**: Find the highest-profit product line in each branch
 
