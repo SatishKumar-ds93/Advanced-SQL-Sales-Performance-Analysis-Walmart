@@ -842,3 +842,9 @@ The combined project demonstrates practical skills in data extraction, data prep
 > **Note:** The Excel dashboard is an additional deliverable created beyond the original MySQL project requirements.
 
 ------------------------------------ END --------------------------------------------------------
+
+[Copyright](https://github.com/SatishKumar-ds93/Advanced-SQL-Sales-Performance-Analysis-Walmart/blob/main/COPYRIGHT.txt)
+
+Copyright © 2026 [$ATISH KUMAR]. All Rights Reserved.  
+Unauthorized copying, modification, distribution, or use of this software is strictly prohibited.
+
